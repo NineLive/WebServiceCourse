@@ -38,7 +38,7 @@ public class AccountService {
         }
     }
 
-    @SuppressWarnings("UnusedDeclaration")
+
     public static Connection getPostgreSqlConnection() {
         try {
             DriverManager.registerDriver((Driver) Class.forName("org.postgresql.Driver").newInstance());
