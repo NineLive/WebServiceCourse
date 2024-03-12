@@ -1,15 +1,18 @@
 package accounts;
 
+import dbService.MyService;
+import dbService.dataSets.UsersDataSet;
+
 import java.sql.*;
 
-public class AccountService {
+public class AccountService implements MyService {
     private final Connection connection;
 
     public AccountService() {
         this.connection = getPostgreSqlConnection();
     }
 
-    public void addNewUser(UserProfile userProfile) {
+    public void addNewUser(UsersDataSet userProfile) {
         String insertQuery = "INSERT INTO users(login, pass) VALUES(?, ?);";
         try (PreparedStatement statement = connection.prepareStatement(insertQuery)) {
             statement.setString(1, userProfile.getLogin());
@@ -20,7 +23,7 @@ public class AccountService {
         }
     }
 
-    public UserProfile getUserByLogin(String login) {
+    public UsersDataSet getUserByLogin(String login) {
         String query = "SELECT * FROM users WHERE login = ?";
         try (PreparedStatement statement = connection.prepareStatement(query, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)) {
             statement.setString(1, login);
@@ -31,7 +34,7 @@ public class AccountService {
 
             String userLogin = results.getString(2);
             String userPass = results.getString(3);
-            return new UserProfile(userLogin, userPass);
+            return new UsersDataSet(userLogin, userPass);
 
         } catch (SQLException e) {
             throw new RuntimeException(e);

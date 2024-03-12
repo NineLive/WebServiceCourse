@@ -1,6 +1,7 @@
 package main;
 
 import accounts.AccountService;
+import dbService.DBService;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.HandlerList;
@@ -13,11 +14,15 @@ import servlets.SignUpServlet;
 public class Main {
 
     public static void main(String[] args) throws Exception {
-        AccountService accountService = new AccountService();
-
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
-        context.addServlet(new ServletHolder(new SignUpServlet(accountService)), "/signup");
-        context.addServlet(new ServletHolder(new SignInServlet(accountService)), "/signin");
+
+//        AccountService accountService = new AccountService();
+//        context.addServlet(new ServletHolder(new SignUpServlet(accountService)), "/signup");
+//        context.addServlet(new ServletHolder(new SignInServlet(accountService)), "/signin");
+
+        DBService dbService = new DBService();
+        context.addServlet(new ServletHolder(new SignUpServlet(dbService)), "/signup");
+        context.addServlet(new ServletHolder(new SignInServlet(dbService)), "/signin");
 
         ResourceHandler resource_handler = new ResourceHandler();
         resource_handler.setResourceBase("public_html");
@@ -30,6 +35,5 @@ public class Main {
 
         server.start();
         server.join();
-
     }
 }
